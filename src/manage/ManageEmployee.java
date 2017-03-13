@@ -20,6 +20,7 @@ import project.Employee;
  *
  * @author Alex
  */
+/*Create Manage Class*/
 public class ManageEmployee {
     private static SessionFactory factory;
     
