@@ -7,13 +7,11 @@ package manage;
 
 import java.util.Iterator;
 import java.util.List;
-import org.hibernate.cfg.Configuration;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import project.Employee;
+import util.HibernateUtil;
 
 
 /**
@@ -22,11 +20,10 @@ import project.Employee;
  */
 /*Create Manage Class*/
 public class ManageEmployee {
-    private static SessionFactory factory;
     
     /*Method to add an Employee in the database*/
     public Integer addEmployee(String fname,String lname,int salary){
-        Session session = factory.openSession();
+        Session session =HibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
         Integer employeeID= null;
         try{
@@ -45,7 +42,7 @@ public class ManageEmployee {
     
     /*Method to read all employees*/
     public void listEmployees(){
-        Session session = factory.openSession();
+        Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
         try{
             tx=session.beginTransaction();
@@ -67,7 +64,7 @@ public class ManageEmployee {
     
     /*Method to UPDATE salary for an employee */
     public void updateEmployee(Integer EmployeeID, int salary){
-        Session session =factory.openSession();
+        Session session =HibernateUtil.getSessionFactory().openSession();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
@@ -85,7 +82,7 @@ public class ManageEmployee {
     
     /*Method to DELETE an employee from the record*/
     public void deleteEmployee(Integer EmployeeID){
-        Session session = factory.openSession();
+        Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx=null;
         try{
             tx=session.beginTransaction();
@@ -101,15 +98,6 @@ public class ManageEmployee {
     }
     
     public static void main(String[] args) {
-        try{
-            Configuration configuration= new Configuration();
-            configuration.configure();
-            StandardServiceRegistryBuilder buildern= new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
-            factory = configuration.buildSessionFactory(buildern.build());
-        } catch (Throwable ex){
-            System.err.println("Failed to create sessionFactory object." +ex);
-            throw new ExceptionInInitializerError(ex);
-        }
         ManageEmployee ME = new ManageEmployee();
         
         Integer emp1 = ME.addEmployee("Alex", "Ali", 1000);
@@ -123,5 +111,7 @@ public class ManageEmployee {
         ME.deleteEmployee(emp2);
         
         ME.listEmployees();
+        
+        HibernateUtil.getSessionFactory().close();
     }
 }
